@@ -1,0 +1,798 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fluid.png">
+  <link rel="icon" href="/img/fluid.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="gjc">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="variational Diffusion Models 论文解读">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Variational Diffusion Models">
+<meta property="og:url" content="http://gjc2.github.io/2023/07/04/2023-07-04-Variational-Diffusion-Models/index.html">
+<meta property="og:site_name" content="gjc&#39;s blog">
+<meta property="og:description" content="variational Diffusion Models 论文解读">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:\Users\A\AppData\Roaming\Typora\typora-user-images\image-20230704110830893.png">
+<meta property="article:published_time" content="2023-07-04T14:00:00.000Z">
+<meta property="article:modified_time" content="2023-10-06T13:14:41.805Z">
+<meta property="article:author" content="gjc">
+<meta property="article:tag" content="generative model, computer vision">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="c:\Users\A\AppData\Roaming\Typora\typora-user-images\image-20230704110830893.png">
+  
+  
+  
+  <title>Variational Diffusion Models - gjc&#39;s blog</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"gjc2.github.io","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>gjc&#39;s blog</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Variational Diffusion Models"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-author" aria-hidden="true"></i>
+        gjc
+      </span>
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2023-07-04 22:00" pubdate>
+          2023年7月4日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          35 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <!-- SEO header -->
+            <h1 style="display: none">Variational Diffusion Models</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="0-author"><a href="#0-author" class="headerlink" title="0 author"></a>0 author</h1><p>Diederik P. Kingma∗, Tim Salimans∗, Ben Poole, Jonathan Ho</p>
+<p>Google Reasearch</p>
+<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>diffusion model已经展现了惊人的图像生成能力，但是之前文章的各类diffusion model在standard image density benchmarks表现不如GAN，本文提出了一类diffusion model 在这上面取得了SOTA</p>
+<h1 id="2-Main-contributions"><a href="#2-Main-contributions" class="headerlink" title="2 Main contributions"></a>2 Main contributions</h1><ul>
+<li>提出了新的diffusion model 取得了SOTA 对数似然在standard image density estimation benchmarks(CIFAR-10 and ImageNet)</li>
+<li>改进了对variational lower bound(VLB)的理解，根据signal-to-noise推导出了简单的扩散过程。从而发现了连续时间diffusion中的不变性。并且证明了各种diffusion models是等效的，取决于一个平凡的时间依赖的对数据的放缩</li>
+</ul>
+<p><img src="C:\Users\A\AppData\Roaming\Typora\typora-user-images\image-20230704110830893.png" srcset="/img/loading.gif" lazyload alt="image-20230704110830893"></p>
+<p>[1]: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2107.00630.pdf">https://arxiv.org/pdf/2107.00630.pdf</a>	“Variational diffusion models”</p>
+<h1 id="3-Related-work"><a href="#3-Related-work" class="headerlink" title="3 Related work"></a>3 Related work</h1><ul>
+<li><p>2015 diffusion probabilistic models(DPMs) </p>
+</li>
+<li><p>2020 DDPM</p>
+</li>
+<li><p>2020 SMLD</p>
+</li>
+<li><p>our work </p>
+</li>
+<li><p>from VAE perspective —-&gt; likelihood under a continuous-time diffusion model</p>
+</li>
+<li><p>use signal-to-noise ratio —-&gt;intuitive and simple loss &#x2F; invariance</p>
+</li>
+</ul>
+<p>![比较](C:\Users\A\Desktop\大三下\diffusion\variational DM\比较.png)</p>
+<h1 id="4-Model"><a href="#4-Model" class="headerlink" title="4 Model"></a>4 Model</h1><p>the most basic case of generative modeling</p>
+<p>x: a dataset observations</p>
+<p>p(x): the task to estimate the marginal distribution p(x)</p>
+<p>latent-variable model consists of a diffusion process</p>
+<p>simple variational lower bound(VLB) to optimization parameters</p>
+<p>![VDM](C:\Users\A\Desktop\大三下\diffusion\variational DM\VDM.png)</p>
+<h2 id="4-1-Forward-time-diffusion-process"><a href="#4-1-Forward-time-diffusion-process" class="headerlink" title="4.1 Forward time diffusion process"></a>4.1 Forward time diffusion process</h2><p>data x</p>
+<p>latent variables $z_t$ : increasingly noisy versions of x </p>
+<p>t :from t&#x3D;0(least noisy) to t&#x3D;1(most noisy)</p>
+<p>$\alpha_t,\sigma_t^2$是关于t的函数</p>
+<p>$t\in[0,1],\ \ q(z_t|x)&#x3D;N(\alpha_t x,\sigma_t^2I)$</p>
+<p>signal-to-noise ratio(SNR):$SNR(t)&#x3D;\alpha_t^2&#x2F;\sigma_t^2$</p>
+<p>monotonically decreasing in time：SNR(t)&lt;SNR(s),for t&gt;s</p>
+<p>$z_t随时间增大是逐渐增加的噪声$</p>
+<p>之前的工作中DDPM variance-preserving diffusion process $\alpha_t&#x3D;\sqrt{1-\sigma_t^2}$</p>
+<p>和score based generative model variance-exploding diffusion model $\alpha_t&#x3D;1$</p>
+<p>本文使用variation-preserving</p>
+<h2 id="4-2-Noise-schedule"><a href="#4-2-Noise-schedule" class="headerlink" title="4.2 Noise schedule"></a>4.2 Noise schedule</h2><p>先前的工作，噪声是固定表达的</p>
+<p>我们加入可学习的参数</p>
+<p>$\sigma_t^2&#x3D;sigmoid(\gamma_{\eta}(t))$ 3 linear layers</p>
+<p>use   $\alpha_t&#x3D;\sqrt{1-\sigma_{t}^2}$ </p>
+<p>$\alpha_t^2&#x3D;sigmoid(-\gamma_{\eta}(t))$</p>
+<p>$SNR(t)&#x3D;exp(-\gamma_{\eta(t)})$</p>
+<h2 id="4-3-Reverse-time-generative-model"><a href="#4-3-Reverse-time-generative-model" class="headerlink" title="4.3 Reverse time generative model"></a>4.3 Reverse time generative model</h2><p>yield a hierarchical generative model that samples a sequence of latent $z_t$</p>
+<p> 从VAE的角度推导</p>
+<p>finite T timesteps</p>
+<p>$s(i)&#x3D;(i-1)&#x2F;T \ and \ t(i)&#x3D;i&#x2F;T$</p>
+<p>$p(x)&#x3D;\int_z p(z_1)p(x|z_0)\Pi_{i&#x3D;1}^T p(z_{s(i)}|z_{t(i)})$</p>
+<ol>
+<li><p>sufficiently small SNR(1) $\rightarrow$ $q(z_1|x)\approx N(z_1;0,I)$ $\rightarrow$ $p(z_1)&#x3D;N(z_1;0,I)$</p>
+</li>
+<li><p>sufficiently large SNR(0) $\rightarrow$ $p(x|z_0)\propto q(z_0|x)$</p>
+</li>
+</ol>
+<h2 id="4-4-Noise-prediction-model"><a href="#4-4-Noise-prediction-model" class="headerlink" title="4.4 Noise prediction model"></a>4.4 Noise prediction model</h2><p>$\hat{x}<em>{\theta}(z_t,t)$ denoising model in terms of noise prediction model $\hat{\epsilon}</em>{\theta}(z_t,t)$</p>
+<p>$\hat{x}<em>{\theta}(z_t,t)&#x3D;(z_t-\sigma_t\hat{\epsilon}</em>{\theta}(z_t,t))&#x2F;\alpha_t$</p>
+<h3 id="4-4-1-attention-Fourier-features"><a href="#4-4-1-attention-Fourier-features" class="headerlink" title="4.4.1 attention! Fourier features"></a>4.4.1 attention! Fourier features</h3><p>prior work emphasizes coarse scale patterns and global consistency of generated images</p>
+<p>our work optimize for likelihood, which is sensitive to fine scale details and exact values of pixels</p>
+<p>add a set of Fourier features to the input of the noise prediction model</p>
+<h2 id="4-5-loss"><a href="#4-5-loss" class="headerlink" title="4.5 loss"></a>4.5 loss</h2><p>VLB</p>
+<p>![vlb](C:\Users\A\Desktop\大三下\diffusion\variational DM\vlb.png)</p>
+<h1 id="5-Discrete-time-model"><a href="#5-Discrete-time-model" class="headerlink" title="5 Discrete-time model"></a>5 Discrete-time model</h1><p>finite T ,using s(i)&#x3D;(i-1)&#x2F;T,t(i)&#x3D;i&#x2F;T</p>
+<p>diffusion loss:</p>
+<p>![loss1](C:\Users\A\Desktop\大三下\diffusion\variational DM\loss1.png)</p>
+<p>simplifies:</p>
+<p>![loss2](C:\Users\A\Desktop\大三下\diffusion\variational DM\loss2.png)</p>
+<p>simplifies:</p>
+<p>![loss3](C:\Users\A\Desktop\大三下\diffusion\variational DM\loss3.png)</p>
+<h2 id="5-1-More-steps-leads-to-lower-loss"><a href="#5-1-More-steps-leads-to-lower-loss" class="headerlink" title="5.1 More steps leads to lower loss"></a>5.1 More steps leads to lower loss</h2><p>T, 2T</p>
+<p>when keeping SNR function fixed,$\hat{x}_\theta$ is sufficiently good</p>
+<p>$L_{2T}(x)&lt;L_{T}(x)$</p>
+<p>![lower los](C:\Users\A\Desktop\大三下\diffusion\variational DM\lower los.png)</p>
+<h1 id="6-Continuous-time-model-T-rightarrow-infin"><a href="#6-Continuous-time-model-T-rightarrow-infin" class="headerlink" title="6 Continuous-time model: $T\rightarrow \infin$"></a>6 Continuous-time model: $T\rightarrow \infin$</h1><p>$T\rightarrow \infin$ </p>
+<p>diffusion loss:</p>
+<p>![inf](C:\Users\A\Desktop\大三下\diffusion\variational DM\inf.png)</p>
+<p>simplifies:</p>
+<p>![inf2](C:\Users\A\Desktop\大三下\diffusion\variational DM\inf2.png)</p>
+<h2 id="6-1-Equivalence-of-diffusion-models-in-continuous-time"><a href="#6-1-Equivalence-of-diffusion-models-in-continuous-time" class="headerlink" title="6.1 Equivalence of diffusion models in continuous time"></a>6.1 Equivalence of diffusion models in continuous time</h2><p>SNR(t) invertible due to the monotonicity assumption</p>
+<p>a change of variables : v&#x3D;SNR(t)</p>
+<p>diffusion loss:</p>
+<p>![inf3](C:\Users\A\Desktop\大三下\diffusion\variational DM\inf3.png)</p>
+<p>this equation shows us is that the only effect the functions $\alpha(t),\sigma(t)$ have on the diffusion loss is through the values SNR(t) at the endpoints t&#x3D;1,t&#x3D;0</p>
+<p>The VLB is thus only impacted by the function SNR(t) through its endpoints SNRmin and SNRmax.</p>
+<p>Futhermore, any two diffusion model can be seen equivalent in continuous time. </p>
+<h1 id="7-Experiments"><a href="#7-Experiments" class="headerlink" title="7 Experiments"></a>7 Experiments</h1><p>CIFAR-10 and ImageNet</p>
+<p>establish a new state-of-the-art in terms of test set likelihood on all considered benchmarks</p>
+<p>![exp](C:\Users\A\Desktop\大三下\diffusion\variational DM\exp.png)</p>
+<h2 id="7-1-Ablations"><a href="#7-1-Ablations" class="headerlink" title="7.1 Ablations"></a>7.1 Ablations</h2>
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/generative-model-computer-vision/">#generative model, computer vision</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Variational Diffusion Models</div>
+      <div>http://gjc2.github.io/2023/07/04/2023-07-04-Variational-Diffusion-Models/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>gjc</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2023年7月4日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2023/04/15/elasticsearch-%E4%BD%BF%E7%94%A8/" title="elasticsearch 使用">
+                        <span class="hidden-mobile">elasticsearch 使用</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://lib.baomitu.com/waline/2.14.1/waline.min.css')
+      Fluid.utils.createScript('https://lib.baomitu.com/waline/2.14.1/waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"https://waline-server-gjc2.vercel.app/","path":"window.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/weibo"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10,"placeholder":"留下你宝贵的意见"},
+          {
+            el: '#waline',
+            path: window.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
