@@ -4,6 +4,56 @@
   
   
   <entry>
+    <title>combinatorial optimization - reading 1</title>
+    <link href="/2023/10/14/lec2/"/>
+    <url>/2023/10/14/lec2/</url>
+    
+    <content type="html"><![CDATA[<h2 id="1-introduction"><a href="#1-introduction" class="headerlink" title="1 introduction"></a>1 introduction</h2><p>组合优化(Combinatorial optimization)是在有限目标集合中寻找最优目标的过程。</p><p>1960年，Edmonds 提出多项式时间来衡量算法是否有效。1970年，Cook和Karp发现NP问题。之后人们对各种组合优化问题进行研究，然后就产生了最大的谜团-N和NP的关系。</p><p>本书关注：P问题，P问题所相关的多面体(polyhedra)及其最大最小对偶问题</p><h2 id="2-Matching"><a href="#2-Matching" class="headerlink" title="2 Matching"></a>2 Matching</h2><hr><p><strong>question: 不等式描述的polytope等价于G的matching的polytope的证明，ellipsoid method</strong></p><hr><p>我们可以通过将matching转化为LP问题来解决</p><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">matching: a <span class="hljs-built_in">subset</span> of <span class="hljs-built_in">edges</span>,<span class="hljs-keyword">and</span> <span class="hljs-built_in">every</span> edge <span class="hljs-built_in">is</span> disjoint<br></code></pre></td></tr></table></figure><p>我们一般都是想求解一个最优化问题，一般我们想得到maximum matching</p><p>我们首先对每个匹配M进行向量化处理(1)变成$X^M\in R^E$<br>$$<br>X^M(e)&#x3D;\left{<br>\begin{aligned}<br>1, e\in M\<br>0, e\notin M \<br>\end{aligned}<br>\right.<br>$$<br>我们求最大匹配就是<br>$$<br>max{w^TX^M|M\ is\ matching\ in\ G}<br>$$<br>由于对这些向量的凸包进行最大化不改变最优化值，可以转化为<br>$$<br>max{w^Tx|x\in conv.hull{X^M|M\ is\ matching\ in\ G}}<br>$$<br>凸包$conv.hull{X^M|M\ is\ matching\ in\ G}\in R^E$ 是一个多面体</p><p>作为一个多面体，可以用矩阵来表述他(具体证明待写)</p><p>$conv.hull&#x3D;{x\in R^E|x\geq0,Ax\leq b}$</p><p>最后转化为，<br>$$<br>max{w^Tx|x\geq 0,Ax\leq b}<br>$$<br>然后我们就要来寻找A，b如何确定</p><h3 id="2-2-约束不等式的确定"><a href="#2-2-约束不等式的确定" class="headerlink" title="2.2 约束不等式的确定"></a>2.2 约束不等式的确定</h3><p>分为G是二部图和非二部图</p><p>case 1： G is bipartite<br>$$<br>for\ &amp;x\in R^E\<br>&amp; x(e)\geq 0,for\ e\in E\<br>&amp; \sum_{v\in e}x(e)\leq 1,for\ v\in V<br>$$<br>这样$A\in R^{V\times E},x\in R^{E\times 1},b\in R^{V\times 1}$</p><p>并且可以证明这样不等式确定的多面体和G的匹配的多面体是等价的</p><p>case 2： G is non bipartite</p><p>不等式约束改变(待写)</p><h2 id="3-TSP"><a href="#3-TSP" class="headerlink" title="3 TSP"></a>3 TSP</h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>TCS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>组合优化</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
+    <title>combinatorial optimization - reading 1</title>
+    <link href="/2023/10/14/reading1/"/>
+    <url>/2023/10/14/reading1/</url>
+    
+    <content type="html"><![CDATA[<h2 id="1-introduction"><a href="#1-introduction" class="headerlink" title="1 introduction"></a>1 introduction</h2><p>组合优化(Combinatorial optimization)是在有限目标集合中寻找最优目标的过程。</p><p>1960年，Edmonds 提出多项式时间来衡量算法是否有效。1970年，Cook和Karp发现NP问题。之后人们对各种组合优化问题进行研究，然后就产生了最大的谜团-N和NP的关系。</p><p>本书关注：P问题，P问题所相关的多面体(polyhedra)及其最大最小对偶问题</p><h2 id="2-Matching"><a href="#2-Matching" class="headerlink" title="2 Matching"></a>2 Matching</h2><hr><p><strong>question: 不等式描述的polytope等价于G的matching的polytope的证明，ellipsoid method</strong></p><hr><p>我们可以通过将matching转化为LP问题来解决</p><figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">matching: a <span class="hljs-built_in">subset</span> of <span class="hljs-built_in">edges</span>,<span class="hljs-keyword">and</span> <span class="hljs-built_in">every</span> edge <span class="hljs-built_in">is</span> disjoint<br></code></pre></td></tr></table></figure><p>我们一般都是想求解一个最优化问题，一般我们想得到maximum matching</p><p>我们首先对每个匹配M进行向量化处理(1)变成$X^M\in R^E$<br>$$<br>X^M(e)&#x3D;\left{<br>\begin{aligned}<br>1, e\in M\<br>0, e\notin M \<br>\end{aligned}<br>\right.<br>$$<br>我们求最大匹配就是<br>$$<br>max{w^TX^M|M\ is\ matching\ in\ G}<br>$$<br>由于对这些向量的凸包进行最大化不改变最优化值，可以转化为<br>$$<br>max{w^Tx|x\in conv.hull{X^M|M\ is\ matching\ in\ G}}<br>$$<br>凸包$conv.hull{X^M|M\ is\ matching\ in\ G}\in R^E$ 是一个多面体</p><p>作为一个多面体，可以用矩阵来表述他(具体证明待写)</p><p>$conv.hull&#x3D;{x\in R^E|x\geq0,Ax\leq b}$</p><p>最后转化为，<br>$$<br>max{w^Tx|x\geq 0,Ax\leq b}<br>$$<br>然后我们就要来寻找A，b如何确定</p><h3 id="2-2-约束不等式的确定"><a href="#2-2-约束不等式的确定" class="headerlink" title="2.2 约束不等式的确定"></a>2.2 约束不等式的确定</h3><p>分为G是二部图和非二部图</p><p>case 1： G is bipartite<br>$$<br>for\ &amp;x\in R^E\<br>&amp; x(e)\geq 0,for\ e\in E\<br>&amp; \sum_{v\in e}x(e)\leq 1,for\ v\in V<br>$$<br>这样$A\in R^{V\times E},x\in R^{E\times 1},b\in R^{V\times 1}$</p><p>并且可以证明这样不等式确定的多面体和G的匹配的多面体是等价的</p><p>case 2： G is non bipartite</p><p>不等式约束改变(待写)</p><h2 id="3-TSP"><a href="#3-TSP" class="headerlink" title="3 TSP"></a>3 TSP</h2>]]></content>
+    
+    
+    <categories>
+      
+      <category>TCS</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>组合优化</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Variational Diffusion Models</title>
     <link href="/2023/07/04/2023-07-04-Variational-Diffusion-Models/"/>
     <url>/2023/07/04/2023-07-04-Variational-Diffusion-Models/</url>

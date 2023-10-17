@@ -16,24 +16,22 @@
   <meta name="author" content="gjc">
   <meta name="keywords" content="">
   
-    <meta name="description" content="variational Diffusion Models 论文解读">
+    <meta name="description" content="1 introduction组合优化(Combinatorial optimization)是在有限目标集合中寻找最优目标的过程。 1960年，Edmonds 提出多项式时间来衡量算法是否有效。1970年，Cook和Karp发现NP问题。之后人们对各种组合优化问题进行研究，然后就产生了最大的谜团-N和NP的关系。 本书关注：P问题，P问题所相关的多面体(polyhedra)及其最大最小对偶问题 2">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Variational Diffusion Models">
-<meta property="og:url" content="http://gjc2.github.io/2023/07/04/2023-07-04-Variational-Diffusion-Models/index.html">
+<meta property="og:title" content="combinatorial optimization - reading 1">
+<meta property="og:url" content="http://gjc2.github.io/2023/10/14/lec2/index.html">
 <meta property="og:site_name" content="gjc&#39;s blog">
-<meta property="og:description" content="variational Diffusion Models 论文解读">
+<meta property="og:description" content="1 introduction组合优化(Combinatorial optimization)是在有限目标集合中寻找最优目标的过程。 1960年，Edmonds 提出多项式时间来衡量算法是否有效。1970年，Cook和Karp发现NP问题。之后人们对各种组合优化问题进行研究，然后就产生了最大的谜团-N和NP的关系。 本书关注：P问题，P问题所相关的多面体(polyhedra)及其最大最小对偶问题 2">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="c:\Users\A\AppData\Roaming\Typora\typora-user-images\image-20230704110830893.png">
-<meta property="article:published_time" content="2023-07-04T14:00:00.000Z">
-<meta property="article:modified_time" content="2023-10-06T13:14:41.805Z">
+<meta property="article:published_time" content="2023-10-14T13:36:37.000Z">
+<meta property="article:modified_time" content="2023-10-17T14:08:47.431Z">
 <meta property="article:author" content="gjc">
-<meta property="article:tag" content="generative model, computer vision">
+<meta property="article:tag" content="组合优化">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="c:\Users\A\AppData\Roaming\Typora\typora-user-images\image-20230704110830893.png">
   
   
   
-  <title>Variational Diffusion Models - gjc&#39;s blog</title>
+  <title>combinatorial optimization - reading 1 - gjc&#39;s blog</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Variational Diffusion Models"></span>
+            <span id="subtitle" data-typed-text="combinatorial optimization - reading 1"></span>
           
         </div>
 
@@ -215,8 +213,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-04 22:00" pubdate>
-          2023年7月4日 晚上
+        <time datetime="2023-10-14 21:36" pubdate>
+          2023年10月14日 晚上
         </time>
       </span>
     
@@ -227,7 +225,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          4.1k 字
+          1k 字
         
       </span>
     
@@ -238,7 +236,7 @@
         
         
         
-          35 分钟
+          9 分钟
         
       </span>
     
@@ -276,103 +274,31 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Variational Diffusion Models</h1>
+            <h1 style="display: none">combinatorial optimization - reading 1</h1>
             
             
               <div class="markdown-body">
                 
-                <h1 id="0-author"><a href="#0-author" class="headerlink" title="0 author"></a>0 author</h1><p>Diederik P. Kingma∗, Tim Salimans∗, Ben Poole, Jonathan Ho</p>
-<p>Google Reasearch</p>
-<h1 id="1-Introduction"><a href="#1-Introduction" class="headerlink" title="1 Introduction"></a>1 Introduction</h1><p>diffusion model已经展现了惊人的图像生成能力，但是之前文章的各类diffusion model在standard image density benchmarks表现不如GAN，本文提出了一类diffusion model 在这上面取得了SOTA</p>
-<h1 id="2-Main-contributions"><a href="#2-Main-contributions" class="headerlink" title="2 Main contributions"></a>2 Main contributions</h1><ul>
-<li>提出了新的diffusion model 取得了SOTA 对数似然在standard image density estimation benchmarks(CIFAR-10 and ImageNet)</li>
-<li>改进了对variational lower bound(VLB)的理解，根据signal-to-noise推导出了简单的扩散过程。从而发现了连续时间diffusion中的不变性。并且证明了各种diffusion models是等效的，取决于一个平凡的时间依赖的对数据的放缩</li>
-</ul>
-<p><img src="C:\Users\A\AppData\Roaming\Typora\typora-user-images\image-20230704110830893.png" srcset="/img/loading.gif" lazyload alt="image-20230704110830893"></p>
-<p>[1]: <a target="_blank" rel="noopener" href="https://arxiv.org/pdf/2107.00630.pdf">https://arxiv.org/pdf/2107.00630.pdf</a>	“Variational diffusion models”</p>
-<h1 id="3-Related-work"><a href="#3-Related-work" class="headerlink" title="3 Related work"></a>3 Related work</h1><ul>
-<li><p>2015 diffusion probabilistic models(DPMs) </p>
-</li>
-<li><p>2020 DDPM</p>
-</li>
-<li><p>2020 SMLD</p>
-</li>
-<li><p>our work </p>
-</li>
-<li><p>from VAE perspective —-&gt; likelihood under a continuous-time diffusion model</p>
-</li>
-<li><p>use signal-to-noise ratio —-&gt;intuitive and simple loss &#x2F; invariance</p>
-</li>
-</ul>
-<p>![比较](C:\Users\A\Desktop\大三下\diffusion\variational DM\比较.png)</p>
-<h1 id="4-Model"><a href="#4-Model" class="headerlink" title="4 Model"></a>4 Model</h1><p>the most basic case of generative modeling</p>
-<p>x: a dataset observations</p>
-<p>p(x): the task to estimate the marginal distribution p(x)</p>
-<p>latent-variable model consists of a diffusion process</p>
-<p>simple variational lower bound(VLB) to optimization parameters</p>
-<p>![VDM](C:\Users\A\Desktop\大三下\diffusion\variational DM\VDM.png)</p>
-<h2 id="4-1-Forward-time-diffusion-process"><a href="#4-1-Forward-time-diffusion-process" class="headerlink" title="4.1 Forward time diffusion process"></a>4.1 Forward time diffusion process</h2><p>data x</p>
-<p>latent variables $z_t$ : increasingly noisy versions of x </p>
-<p>t :from t&#x3D;0(least noisy) to t&#x3D;1(most noisy)</p>
-<p>$\alpha_t,\sigma_t^2$是关于t的函数</p>
-<p>$t\in[0,1],\ \ q(z_t|x)&#x3D;N(\alpha_t x,\sigma_t^2I)$</p>
-<p>signal-to-noise ratio(SNR):$SNR(t)&#x3D;\alpha_t^2&#x2F;\sigma_t^2$</p>
-<p>monotonically decreasing in time：SNR(t)&lt;SNR(s),for t&gt;s</p>
-<p>$z_t随时间增大是逐渐增加的噪声$</p>
-<p>之前的工作中DDPM variance-preserving diffusion process $\alpha_t&#x3D;\sqrt{1-\sigma_t^2}$</p>
-<p>和score based generative model variance-exploding diffusion model $\alpha_t&#x3D;1$</p>
-<p>本文使用variation-preserving</p>
-<h2 id="4-2-Noise-schedule"><a href="#4-2-Noise-schedule" class="headerlink" title="4.2 Noise schedule"></a>4.2 Noise schedule</h2><p>先前的工作，噪声是固定表达的</p>
-<p>我们加入可学习的参数</p>
-<p>$\sigma_t^2&#x3D;sigmoid(\gamma_{\eta}(t))$ 3 linear layers</p>
-<p>use   $\alpha_t&#x3D;\sqrt{1-\sigma_{t}^2}$ </p>
-<p>$\alpha_t^2&#x3D;sigmoid(-\gamma_{\eta}(t))$</p>
-<p>$SNR(t)&#x3D;exp(-\gamma_{\eta(t)})$</p>
-<h2 id="4-3-Reverse-time-generative-model"><a href="#4-3-Reverse-time-generative-model" class="headerlink" title="4.3 Reverse time generative model"></a>4.3 Reverse time generative model</h2><p>yield a hierarchical generative model that samples a sequence of latent $z_t$</p>
-<p> 从VAE的角度推导</p>
-<p>finite T timesteps</p>
-<p>$s(i)&#x3D;(i-1)&#x2F;T \ and \ t(i)&#x3D;i&#x2F;T$</p>
-<p>$p(x)&#x3D;\int_z p(z_1)p(x|z_0)\Pi_{i&#x3D;1}^T p(z_{s(i)}|z_{t(i)})$</p>
-<ol>
-<li><p>sufficiently small SNR(1) $\rightarrow$ $q(z_1|x)\approx N(z_1;0,I)$ $\rightarrow$ $p(z_1)&#x3D;N(z_1;0,I)$</p>
-</li>
-<li><p>sufficiently large SNR(0) $\rightarrow$ $p(x|z_0)\propto q(z_0|x)$</p>
-</li>
-</ol>
-<h2 id="4-4-Noise-prediction-model"><a href="#4-4-Noise-prediction-model" class="headerlink" title="4.4 Noise prediction model"></a>4.4 Noise prediction model</h2><p>$\hat{x}<em>{\theta}(z_t,t)$ denoising model in terms of noise prediction model $\hat{\epsilon}</em>{\theta}(z_t,t)$</p>
-<p>$\hat{x}<em>{\theta}(z_t,t)&#x3D;(z_t-\sigma_t\hat{\epsilon}</em>{\theta}(z_t,t))&#x2F;\alpha_t$</p>
-<h3 id="4-4-1-attention-Fourier-features"><a href="#4-4-1-attention-Fourier-features" class="headerlink" title="4.4.1 attention! Fourier features"></a>4.4.1 attention! Fourier features</h3><p>prior work emphasizes coarse scale patterns and global consistency of generated images</p>
-<p>our work optimize for likelihood, which is sensitive to fine scale details and exact values of pixels</p>
-<p>add a set of Fourier features to the input of the noise prediction model</p>
-<h2 id="4-5-loss"><a href="#4-5-loss" class="headerlink" title="4.5 loss"></a>4.5 loss</h2><p>VLB</p>
-<p>![vlb](C:\Users\A\Desktop\大三下\diffusion\variational DM\vlb.png)</p>
-<h1 id="5-Discrete-time-model"><a href="#5-Discrete-time-model" class="headerlink" title="5 Discrete-time model"></a>5 Discrete-time model</h1><p>finite T ,using s(i)&#x3D;(i-1)&#x2F;T,t(i)&#x3D;i&#x2F;T</p>
-<p>diffusion loss:</p>
-<p>![loss1](C:\Users\A\Desktop\大三下\diffusion\variational DM\loss1.png)</p>
-<p>simplifies:</p>
-<p>![loss2](C:\Users\A\Desktop\大三下\diffusion\variational DM\loss2.png)</p>
-<p>simplifies:</p>
-<p>![loss3](C:\Users\A\Desktop\大三下\diffusion\variational DM\loss3.png)</p>
-<h2 id="5-1-More-steps-leads-to-lower-loss"><a href="#5-1-More-steps-leads-to-lower-loss" class="headerlink" title="5.1 More steps leads to lower loss"></a>5.1 More steps leads to lower loss</h2><p>T, 2T</p>
-<p>when keeping SNR function fixed,$\hat{x}_\theta$ is sufficiently good</p>
-<p>$L_{2T}(x)&lt;L_{T}(x)$</p>
-<p>![lower los](C:\Users\A\Desktop\大三下\diffusion\variational DM\lower los.png)</p>
-<h1 id="6-Continuous-time-model-T-rightarrow-infin"><a href="#6-Continuous-time-model-T-rightarrow-infin" class="headerlink" title="6 Continuous-time model: $T\rightarrow \infin$"></a>6 Continuous-time model: $T\rightarrow \infin$</h1><p>$T\rightarrow \infin$ </p>
-<p>diffusion loss:</p>
-<p>![inf](C:\Users\A\Desktop\大三下\diffusion\variational DM\inf.png)</p>
-<p>simplifies:</p>
-<p>![inf2](C:\Users\A\Desktop\大三下\diffusion\variational DM\inf2.png)</p>
-<h2 id="6-1-Equivalence-of-diffusion-models-in-continuous-time"><a href="#6-1-Equivalence-of-diffusion-models-in-continuous-time" class="headerlink" title="6.1 Equivalence of diffusion models in continuous time"></a>6.1 Equivalence of diffusion models in continuous time</h2><p>SNR(t) invertible due to the monotonicity assumption</p>
-<p>a change of variables : v&#x3D;SNR(t)</p>
-<p>diffusion loss:</p>
-<p>![inf3](C:\Users\A\Desktop\大三下\diffusion\variational DM\inf3.png)</p>
-<p>this equation shows us is that the only effect the functions $\alpha(t),\sigma(t)$ have on the diffusion loss is through the values SNR(t) at the endpoints t&#x3D;1,t&#x3D;0</p>
-<p>The VLB is thus only impacted by the function SNR(t) through its endpoints SNRmin and SNRmax.</p>
-<p>Futhermore, any two diffusion model can be seen equivalent in continuous time. </p>
-<h1 id="7-Experiments"><a href="#7-Experiments" class="headerlink" title="7 Experiments"></a>7 Experiments</h1><p>CIFAR-10 and ImageNet</p>
-<p>establish a new state-of-the-art in terms of test set likelihood on all considered benchmarks</p>
-<p>![exp](C:\Users\A\Desktop\大三下\diffusion\variational DM\exp.png)</p>
-<h2 id="7-1-Ablations"><a href="#7-1-Ablations" class="headerlink" title="7.1 Ablations"></a>7.1 Ablations</h2>
+                <h2 id="1-introduction"><a href="#1-introduction" class="headerlink" title="1 introduction"></a>1 introduction</h2><p>组合优化(Combinatorial optimization)是在有限目标集合中寻找最优目标的过程。</p>
+<p>1960年，Edmonds 提出多项式时间来衡量算法是否有效。1970年，Cook和Karp发现NP问题。之后人们对各种组合优化问题进行研究，然后就产生了最大的谜团-N和NP的关系。</p>
+<p>本书关注：P问题，P问题所相关的多面体(polyhedra)及其最大最小对偶问题</p>
+<h2 id="2-Matching"><a href="#2-Matching" class="headerlink" title="2 Matching"></a>2 Matching</h2><hr>
+<p><strong>question: 不等式描述的polytope等价于G的matching的polytope的证明，ellipsoid method</strong></p>
+<hr>
+<p>我们可以通过将matching转化为LP问题来解决</p>
+<figure class="highlight maxima"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs maxima">matching: a <span class="hljs-built_in">subset</span> of <span class="hljs-built_in">edges</span>,<span class="hljs-keyword">and</span> <span class="hljs-built_in">every</span> edge <span class="hljs-built_in">is</span> disjoint<br></code></pre></td></tr></table></figure>
+
+<p>我们一般都是想求解一个最优化问题，一般我们想得到maximum matching</p>
+<p>我们首先对每个匹配M进行向量化处理(1)变成$X^M\in R^E$<br>$$<br>X^M(e)&#x3D;\left{<br>\begin{aligned}<br>1, e\in M\<br>0, e\notin M \<br>\end{aligned}<br>\right.<br>$$<br>我们求最大匹配就是<br>$$<br>max{w^TX^M|M\ is\ matching\ in\ G}<br>$$<br>由于对这些向量的凸包进行最大化不改变最优化值，可以转化为<br>$$<br>max{w^Tx|x\in conv.hull{X^M|M\ is\ matching\ in\ G}}<br>$$<br>凸包$conv.hull{X^M|M\ is\ matching\ in\ G}\in R^E$ 是一个多面体</p>
+<p>作为一个多面体，可以用矩阵来表述他(具体证明待写)</p>
+<p>$conv.hull&#x3D;{x\in R^E|x\geq0,Ax\leq b}$</p>
+<p>最后转化为，<br>$$<br>max{w^Tx|x\geq 0,Ax\leq b}<br>$$<br>然后我们就要来寻找A，b如何确定</p>
+<h3 id="2-2-约束不等式的确定"><a href="#2-2-约束不等式的确定" class="headerlink" title="2.2 约束不等式的确定"></a>2.2 约束不等式的确定</h3><p>分为G是二部图和非二部图</p>
+<p>case 1： G is bipartite<br>$$<br>for\ &amp;x\in R^E\<br>&amp; x(e)\geq 0,for\ e\in E\<br>&amp; \sum_{v\in e}x(e)\leq 1,for\ v\in V<br>$$<br>这样$A\in R^{V\times E},x\in R^{E\times 1},b\in R^{V\times 1}$</p>
+<p>并且可以证明这样不等式确定的多面体和G的匹配的多面体是等价的</p>
+<p>case 2： G is non bipartite</p>
+<p>不等式约束改变(待写)</p>
+<h2 id="3-TSP"><a href="#3-TSP" class="headerlink" title="3 TSP"></a>3 TSP</h2>
                 
               </div>
             
@@ -380,11 +306,32 @@
             <div>
               <div class="post-metas my-3">
   
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/TCS/" class="category-chain-item">TCS</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
   
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/generative-model-computer-vision/">#generative model, computer vision</a>
+        <a href="/tags/%E7%BB%84%E5%90%88%E4%BC%98%E5%8C%96/">#组合优化</a>
       
     </div>
   
@@ -396,8 +343,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Variational Diffusion Models</div>
-      <div>http://gjc2.github.io/2023/07/04/2023-07-04-Variational-Diffusion-Models/</div>
+      <div>combinatorial optimization - reading 1</div>
+      <div>http://gjc2.github.io/2023/10/14/lec2/</div>
     </div>
     <div class="license-meta">
       
@@ -409,7 +356,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年7月4日</div>
+          <div>2023年10月14日</div>
         </div>
       
       
@@ -441,18 +388,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/10/14/reading1/" title="combinatorial optimization - reading 1">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">combinatorial optimization - reading 1</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/15/elasticsearch-%E4%BD%BF%E7%94%A8/" title="elasticsearch 使用">
-                        <span class="hidden-mobile">elasticsearch 使用</span>
+                      <a href="/2023/10/14/reading1/" title="combinatorial optimization - reading 1">
+                        <span class="hidden-mobile">combinatorial optimization - reading 1</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -541,12 +482,6 @@
 
 
   
-
-
-  
-  
-
-
 
 
 
@@ -740,49 +675,6 @@
 
 
   <script>Fluid.plugins.imageCaption();</script>
-
-  
-      <script>
-        if (!window.MathJax) {
-          window.MathJax = {
-            tex    : {
-              inlineMath: { '[+]': [['$', '$']] }
-            },
-            loader : {
-              load: ['ui/lazy']
-            },
-            options: {
-              renderActions: {
-                insertedScript: [200, () => {
-                  document.querySelectorAll('mjx-container').forEach(node => {
-                    let target = node.parentNode;
-                    if (target.nodeName.toLowerCase() === 'li') {
-                      target.parentNode.classList.add('has-jax');
-                    }
-                  });
-                }, '', false]
-              }
-            }
-          };
-        } else {
-          MathJax.startup.document.state(0);
-          MathJax.texReset();
-          MathJax.typeset();
-          MathJax.typesetPromise();
-        }
-
-        Fluid.events.registerRefreshCallback(function() {
-          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
-            MathJax.startup.document.state(0);
-            MathJax.texReset();
-            MathJax.typeset();
-            MathJax.typesetPromise();
-          }
-        });
-      </script>
-    
-
-  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 
