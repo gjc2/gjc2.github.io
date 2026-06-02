@@ -1,8 +1,8 @@
 locale: "en-US"
 site_theme: "default"
-title: "Jincheng Guan"
+title: "Jincheng Guan (管进程)"
 title_separator: "-"
-name: &name "Jincheng Guan"
+name: &name "Jincheng Guan (管进程)"
 description: &description "Jincheng Guan's academic homepage. Research interests: computational complexity classification of decision, optimization, and counting problems under the Holant framework."
 url: "https://gjc2.github.io"
 baseurl: ""
@@ -10,7 +10,7 @@ repository: "gjc2/gjc2.github.io"
 
 author:
   avatar: "profile.jpg"
-  name: "Jincheng Guan"
+  name: "Jincheng Guan (管进程)"
   pronouns:
   bio: "&nbsp;"
   location: "University of Science and Technology of China"
