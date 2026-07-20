@@ -17,13 +17,11 @@ Research interests {#research}
 Publications {#publications}
 ======
 
-- To appear.
+- An LP Algorithm for Counting Eulerian Orientations Through the Lens of Quasi-polymorphism. To be posted on arXiv.
 - To appear.
 
 News
 ======
-
-- 2026.05 Migrated this academic homepage to the Academic Pages template.
 
 Contact
 ======
