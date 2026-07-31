@@ -17,7 +17,7 @@ Research interests {#research}
 Publications {#publications}
 ======
 
-- [An LP Algorithm for Counting Eulerian Orientations Through the Lens of Quasi-polymorphism](https://arxiv.org/abs/2607.27961), with [Shike](https://keshi.pro/) and [Prof. Shuai Shao](http://staff.ustc.edu.cn/~wwwucuc/).
+- **An LP Algorithm for Counting Eulerian Orientations Through the Lens of Quasi-polymorphism**. [arXiv:2607.27961](https://arxiv.org/abs/2607.27961). Authors: Guan, Jincheng; [Shi, Ke](https://keshi.pro/); [Shao, Shuai](http://staff.ustc.edu.cn/~wwwucuc/).
 - To appear.
 
 News
