@@ -76,7 +76,7 @@ body {
 }
 
 .page__content .publication-authors a {
-  color: inherit;
+  color: var(--global-link-color);
   text-decoration: underline;
   text-decoration-color: currentColor;
   text-decoration-thickness: 1px;
