@@ -17,6 +17,10 @@ Research interests {#research}
 Publications {#publications}
 ======
 
+3. A Dichotomy for Boolean Complex Holant Problems with Conjugate-Closed Signature Sets<br>
+<strong class="publication-authors"><a href="https://gjc2.github.io">Jincheng Guan</a>, <a href="http://staff.ustc.edu.cn/~wwwucuc/">Shuai Shao</a> and Zhuxiao Tang</strong><br>
+<strong>arXiv 2609.13132</strong> [<a class="publication-resource" href="https://arxiv.org/abs/2609.13132">arxiv</a>]
+
 4. An LP Algorithm for Counting Eulerian Orientations Through the Lens of Quasi-polymorphism<br>
 <strong class="publication-authors"><a href="https://gjc2.github.io">Jincheng Guan</a>, <a href="http://staff.ustc.edu.cn/~wwwucuc/">Shuai Shao</a> and <a href="https://keshi.pro/">Ke Shi</a></strong><br>
 <strong>arXiv 2607.27961</strong> [<a class="publication-resource" href="https://arxiv.org/abs/2607.27961">arxiv</a>]
