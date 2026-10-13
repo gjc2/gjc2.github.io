@@ -1,28 +1,14 @@
-# Ignore the contents of the _site directory and other cache directories
-_site/
-.sass-cache/
+# Hugo build output and cache
+/public/
+/resources/
+/.hugo_build.lock
+/hugo_stats.json
 
-# Ignore the directory for local files during development
-local/
-
-# Ignore the Gemfile that is generated
-Gemfile.lock
-
-# Ignore files created by npm
-node_modules
-package-lock.json
-
-# Ignore the vendor file at root level and bundle for alternative installation
-/vendor/
-.bundle/
-
-# Ignore folders related to IDEs
+# Local development files
+.DS_Store
 .vscode/
 
-# Ignore files created by MacOS
-.DS_Store
-
-# Ignore local LaTeX build artifacts
+# Local LaTeX build artifacts
 *.aux
 *.log
 *.out

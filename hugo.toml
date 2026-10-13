@@ -1,0 +1,79 @@
+baseURL = "https://gjc2.github.io/"
+locale = "en-US"
+title = "Jincheng Guan (管进程)"
+theme = "PaperMod"
+timeZone = "Asia/Shanghai"
+disablePathToLower = true
+enableRobotsTXT = true
+disableKinds = ["taxonomy", "term"]
+
+[params]
+  description = "Jincheng Guan's academic homepage. Research interests: computational complexity classification of decision, optimization, and counting problems under the Holant framework."
+  author = "Jincheng Guan"
+  defaultTheme = "auto"
+  ShowShareButtons = false
+  ShowReadingTime = false
+  hideMeta = true
+
+  [params.label]
+    text = "Jincheng Guan"
+
+  [params.profileMode]
+    enabled = true
+    title = "Jincheng Guan (管进程)"
+    subtitle = "University of Science and Technology of China"
+    imageUrl = "images/profile.jpg"
+    imageTitle = "Jincheng Guan"
+    imageWidth = 144
+    imageHeight = 144
+
+  [[params.socialIcons]]
+    name = "email"
+    url = "mailto:guanjincheng@mail.ustc.edu.cn"
+  [[params.socialIcons]]
+    name = "github"
+    url = "https://github.com/gjc2"
+
+  [params.assets]
+    favicon = "images/favicon.ico"
+    favicon16x16 = "images/favicon-32x32.png"
+    favicon32x32 = "images/favicon-32x32.png"
+    apple_touch_icon = "images/apple-touch-icon-180x180.png"
+    safari_pinned_tab = "images/favicon.svg"
+
+[[menu.main]]
+  name = "Home"
+  url = "/"
+  weight = 10
+[[menu.main]]
+  name = "Research"
+  url = "/#research"
+  weight = 20
+[[menu.main]]
+  name = "Publications"
+  url = "/#publications"
+  weight = 30
+[[menu.main]]
+  name = "CV"
+  url = "/files/CV.pdf"
+  weight = 40
+
+[markup.goldmark.renderer]
+  unsafe = true
+
+[markup.highlight]
+  noClasses = false
+
+# Preserve the existing public URLs without moving the original assets.
+[[module.mounts]]
+  source = "images"
+  target = "static/images"
+[[module.mounts]]
+  source = "files"
+  target = "static/files"
+
+[outputs]
+  home = ["HTML", "RSS"]
+
+[outputFormats.RSS]
+  baseName = "feed"
